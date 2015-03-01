@@ -34,20 +34,19 @@ end
 
 %% Calculate the sonic point
 
-A    = (pi/4) * D.^2;         % Area, m^2
-dAdx = diff( A ) ./ diff( x );% diff returns per cell difference.
-dAdx = [ dAdx(1), dAdx ];     %   that is 1 spot shorter b/c can't estimate
-                              %   derivative of A(1) due to no A(0) info.                       
-dAdx = dAdx / 5; % Magic number makes it work better
+A    = (pi/4) * D.^2;     % Area, m^2
+dAdx = diff( A ) * 100;   % diff returns percentage derivative
+dAdx = [ dAdx(1), dAdx ]; %   that is 1 spot shorter b/c can't estimate
+                          %   derivative of A(1) due to no A(0) info.
                               
 
                           
 % The actual equation being calculated, solved for zero.
 error = ( dAdx ./ A ) - ( 2 * gamma * f ./ D );
 
-% Used for debugging:
-% plot( x, dAdx ./ A, x, (2*f*gamma ./ D), x, error );
-%legend( 'dAdx/A', 'f/D', 'err' );
+
+plot( x, dAdx ./ A, x, (2*f*gamma ./ D), x, error );
+legend( 'dAdx/A', 'f/D', 'err' );
 
 % Now solve find the zero location.
 %    There are actually two (or more?) zeros, and we only want the first

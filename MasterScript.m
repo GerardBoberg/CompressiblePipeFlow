@@ -24,13 +24,13 @@ close all;
 f = 0.005;   % given friction factor
 gamma = 1.4; % gamma of air
 
-L  = 2;    % meters, Length of nozzle
 Dt = 0.05; % meters, Diameter of the Throat 
-n = 1001; % number of steps to numerically solve with
+L  = 2;    % meters, Length of nozzle
+n = 10001;  % number of steps to numerically solve with
 x = linspace( 0, L, n );
 
 % Calculate the diameter variation over our geometry
-D = ConDiNozzleDiameter( x, L / 2.0, Dt ); % The equation for the nozzle expects L/2
+D = ConDiNozzleDiameter( x, Dt, L / 2.0 ); % The equation for the nozzle expects L/2
 
 % Find the choke point
 [ choke_location, choke_index, ~ ] = FindChokePoint( x, D, f, gamma );
@@ -38,4 +38,13 @@ D = ConDiNozzleDiameter( x, L / 2.0, Dt ); % The equation for the nozzle expects
 figure();
 PlotNozzle( x, D );
 hold on;
-plot( [choke_location, choke_location], [ 1.5*Dt, -1.5*Dt], 'r--' );
+plot( [choke_location, choke_location], [ 1.5, -1.5], 'r' );
+axis( [0, 2, -1.5, 1.5] );
+display( ['The choke location is at: ', num2str( choke_location ), ' meters'] );
+
+%% Step 2: Compare to 1D Fanno Flow
+%
+% Fanno flow only has friction, with no area change.
+
+% Start with a constant diameter pipe
+D_f = ConstantDiameter( x, Dt * 3 );
