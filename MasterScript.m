@@ -123,9 +123,12 @@ figure();
 subplot( 1, 2, 1 ), plot(...
       x_out_1, Mach_out_1, x_out_1, T_1,...
       x_out_1, T0_1, x_out_1, P_1, x_out_1, P0_1 );
+axis( [ span(1), span(end), 0, 1] );
 title( 'Purely subsonic flow with friction' );
 legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
         'Location', 'South');
+xlabel( 'x, meters' );
+ylabel( 'normalized value' );
 
 subplot( 1, 2, 2 ), plot(...
       x_out_1f, Mach_out_1f, x_out_1f, T_1f,...
@@ -134,15 +137,17 @@ axis( [span(1), span(end), 0, 1] );
 title( 'Purely subsonic flow, frictionless' );
 legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
         'Location', 'South' );
+xlabel( 'x, meters' );
+ylabel( 'normalized value' );
 
 
 display( '----- Case 1 -----' )
 display( 'Exit condition thermo properties = X * isentropic values' );
-display( ['M_friction  = ', num2str( Mach_out_1(end)/Mach_out_1f(end) ), ' * M_isen' ] );
-display( ['P_friction  = ', num2str( P_1(end)/P_1f(end) ), ' * P_isen' ] );
-display( ['P0_friction = ', num2str( P0_1(end)/P0_1f(end) ), ' * P0_isen' ] );
-display( ['T_friction  = ', num2str( T_1(end)/T_1f(end) ), ' * T_isen' ] );
-display( ['T0_friction = ', num2str( T0_1(end)/T0_1f(end) ), ' * T0_isen' ] );
+display( ['M_friction  = ', num2str( (1 - Mach_out_1(end)/Mach_out_1f(end)) ), ' * M_isen' ] );
+display( ['P_friction  = ', num2str( (1 - P_1(end)/P_1f(end) )), ' * P_isen' ] );
+display( ['P0_friction = ', num2str( (1 - P0_1(end)/P0_1f(end) )), ' * P0_isen' ] );
+display( ['T_friction  = ', num2str( (1 - T_1(end)/T_1f(end) )), ' * T_isen' ] );
+display( ['T0_friction = ', num2str( (1 - T0_1(end)/T0_1f(end) )), ' * T0_isen' ] );
                                             
 %% -- Case 2: choked flow, subsonic after choke
 % With friction
@@ -153,17 +158,10 @@ ss_ac = false;
                                                 Dfun, Dt, L,...
                                                 f, gamma, ss_ac);
 
-figure();
-plot( x_out_2, Mach_out_2, x_out_2, T_2, x_out_2, T0_2, x_out_2,...
-      P_2, x_out_2, P0_2 );
-title( 'Choked flow, with subsonic exit, with friction' );
-legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
-        'Location', 'South' );
-
-figure();
-dMdx_2 = diff( Mach_out_2 ) ./ diff( x_out_2 );
-plot( x_out_2(2:end), dMdx_2 );
-title( 'dMdx, choked subsonic' );
+%figure();
+%dMdx_2 = diff( Mach_out_2 ) ./ diff( x_out_2 );
+%plot( x_out_2(2:end), dMdx_2 );
+%title( 'dMdx, choked subsonic' );
 
 
 %--- Without friction
@@ -175,21 +173,33 @@ ss_ac = false;
                                                 0, gamma, ss_ac);
 
 figure();
-plot( x_out_2f, Mach_out_2f, x_out_2f, T_2f, x_out_2f, T0_2f, x_out_2f,...
-      P_2f, x_out_2f, P0_2f );
-title( 'Choked flow, with subsonic exit, frictionless' );
+subplot( 1, 2, 1 ), plot(...
+      x_out_2, Mach_out_2, x_out_2, T_2, x_out_2, T0_2,...
+      x_out_2, P_2, x_out_2, P0_2 );
+axis( [ span(1), span(end), 0, 1] );
+title( 'Choked subsonic exit, with friction' );
+legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
+        'Location', 'South' );
+xlabel( 'x, meters' );
+ylabel( 'normalized value' );
+subplot( 1, 2, 2 ), plot(...
+      x_out_2f, Mach_out_2f, x_out_2f, T_2f, x_out_2f, T0_2f,...
+      x_out_2f, P_2f, x_out_2f, P0_2f );
+title( 'Choked subsonic exit, frictionless' );
 axis( [ span(1), span(end), 0, 1] );
 legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
         'Location', 'South' );
+xlabel( 'x, meters' );
+ylabel( 'normalized value' );
 
 
 display( '----- Case 2 -----' )
 display( 'Exit condition thermo properties = X * isentropic values' );
-display( ['M_friction  = ', num2str( Mach_out_2(end)/Mach_out_2f(end) ), ' * M_isen' ] );
-display( ['P_friction  = ', num2str( P_2(end)/P_2f(end) ), ' * P_isen' ] );
-display( ['P0_friction = ', num2str( P0_2(end)/P0_2f(end) ), ' * P0_isen' ] );
-display( ['T_friction  = ', num2str( T_2(end)/T_2f(end) ), ' * T_isen' ] );
-display( ['T0_friction = ', num2str( T0_2(end)/T0_2f(end) ), ' * T0_isen' ] );
+display( ['M_friction  = ', num2str( 1 - Mach_out_2(end)/Mach_out_2f(end) ), ' * M_isen' ] );
+display( ['P_friction  = ', num2str( 1 - P_2(end)/P_2f(end) ), ' * P_isen' ] );
+display( ['P0_friction = ', num2str( 1 - P0_2(end)/P0_2f(end) ), ' * P0_isen' ] );
+display( ['T_friction  = ', num2str( 1 - T_2(end)/T_2f(end) ), ' * T_isen' ] );
+display( ['T0_friction = ', num2str( 1 - T0_2(end)/T0_2f(end) ), ' * T0_isen' ] );
                                             
 %% -- Case 3: choked flow, supersonic after choke
 % With friction
@@ -200,12 +210,6 @@ ss_ac = true;
                                                 Dfun, Dt, L,...
                                                 f, gamma, ss_ac);
 
-figure();
-plot( x_out_3, Mach_out_3, x_out_3, T_3, x_out_3, T0_3, x_out_3,...
-      P_3, x_out_3, P0_3 );
-title( 'Choked flow, with supersonic exit, with friction' )
-legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
-        'Location', 'NorthWest' )
 
 %--- Without friction
 M_i   = 0.06447;
@@ -216,18 +220,29 @@ ss_ac = true;
                                                 0, gamma, ss_ac);
 
 figure();
-plot( x_out_3f, Mach_out_3f, x_out_3f, T_3f, x_out_3f, T0_3f, x_out_3f,...
-      P_3f, x_out_3f, P0_3f );
-title( 'Choked flow, with supersonic exit, frictionless' )
+subplot( 1, 2, 1 ), plot(...
+      x_out_3, Mach_out_3, x_out_3, T_3, x_out_3, T0_3,...
+      x_out_3, P_3, x_out_3, P0_3 );
+title( 'Choked supersonic exit, with friction' )
 legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
         'Location', 'NorthWest' )
+xlabel( 'x, meters' );
+ylabel( 'normalized value' );
+subplot( 1, 2, 2 ), plot(...
+      x_out_3f, Mach_out_3f, x_out_3f, T_3f, x_out_3f, T0_3f,...
+      x_out_3f, P_3f, x_out_3f, P0_3f );
+title( 'Choked supersonic exit, frictionless' )
+legend( 'Mach number', 'T / T_i', 'T_0 / T_0_,_i', 'P / P_i', 'P / P_0_,_i',...
+        'Location', 'NorthWest' )
+xlabel( 'x, meters' );
+ylabel( 'normalized value' );
 
 
 display( '----- Case 3 -----' )
 display( 'Exit condition thermo properties = X * isentropic values' );
-display( ['M_friction  = ', num2str( Mach_out_3(end)/Mach_out_3f(end) ), ' * M_isen' ] );
-display( ['P_friction  = ', num2str( P_3(end)/P_3f(end) ), ' * P_isen' ] );
-display( ['P0_friction = ', num2str( P0_3(end)/P0_3f(end) ), ' * P0_isen' ] );
-display( ['T_friction  = ', num2str( T_3(end)/T_3f(end) ), ' * T_isen' ] );
-display( ['T0_friction = ', num2str( T0_3(end)/T0_3f(end) ), ' * T0_isen' ] );
+display( ['M_friction  = ', num2str( 1 - Mach_out_3(end)/Mach_out_3f(end) ), ' * M_isen' ] );
+display( ['P_friction  = ', num2str( 1 - P_3(end)/P_3f(end) ), ' * P_isen' ] );
+display( ['P0_friction = ', num2str( 1 - P0_3(end)/P0_3f(end) ), ' * P0_isen' ] );
+display( ['T_friction  = ', num2str( 1 - T_3(end)/T_3f(end) ), ' * T_isen' ] );
+display( ['T0_friction = ', num2str( 1 - T0_3(end)/T0_3f(end) ), ' * T0_isen' ] );
 
