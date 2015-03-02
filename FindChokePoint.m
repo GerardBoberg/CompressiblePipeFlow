@@ -39,8 +39,8 @@ A    = (pi/4) * D.^2;         % Area, m^2
 dAdx = diff( A ) ./ diff( x );% diff returns per cell difference.
 dAdx = [ dAdx(1), dAdx ];     %   that is 1 spot shorter b/c can't estimate
                               %   derivative of A(1) due to no A(0) info.                       
-% dAdx = dAdx / 1; % Magic number makes it work better % No, no it doesn't
-                              
+ dAdx = dAdx / 4; % Magic number makes it work better % No, no it doesn't
+                  % Yes, yes it does.
 
                           
 % The actual equation being calculated, solved for zero.

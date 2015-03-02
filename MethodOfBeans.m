@@ -31,7 +31,14 @@ n           = 100001; % increase for more percision. Needs to be odd.
 x_arr_choke = linspace( span(1), span(end), n );
 D_arr_choke = Dfun( x_arr_choke, Dt, L );
 
-[ x_choke, ~, ~ ] = FindChokePoint( x_arr_choke, D_arr_choke, f, gamma );
+% The nozzle has constant diameter. Give a false x_choke around 0+delta
+%  so that it will determine that it is not choked and propogate forwards.
+if( max( abs( diff( D_arr_choke ) ) ) <= 1e-8 )
+    delta_x = ( span(end) - span(1) ) / 1000;
+    x_choke = span(1) + delta_x;
+else
+    [ x_choke, ~, ~ ] = FindChokePoint( x_arr_choke, D_arr_choke, f, gamma );
+end
 
 [ M_plus, M_minus ] = SolveMachSingularRoots( x_choke, Dfun, Dt,...
                                               L, f, gamma );
@@ -79,7 +86,8 @@ elseif( M_check > M_i )
 % Case C -- Error out. We're not handling supersonic shockwaves.
 else%if( M_check < M_i )
     e_message = [ 'Inlet Condition is non-physical! Maximum physical',...
-                    'inlet condition is Mach_i = ', num2str(M_check) ];
+                    'inlet condition is Mach_i = ', num2str(M_check),...
+                    '. M_i given = ', num2str( M_i ) ];
     error( e_message );
 end
 

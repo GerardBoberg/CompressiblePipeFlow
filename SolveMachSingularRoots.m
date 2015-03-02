@@ -85,3 +85,9 @@ else
     M_minus = r(1);
 end
 
+% In the case of a constant diameter pipe, an edge case of zero occurs
+tol = 1e-6;
+if( abs( M_plus ) < tol || abs( M_minus ) < tol )
+    M_plus  = tol;
+    M_minus = -tol;
+end

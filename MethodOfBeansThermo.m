@@ -26,7 +26,7 @@ end
 %
 % T0 / T = 1 + ( (gamma - 1) / 2 ) M^2
 % T0 = T * ( T0 / T )
-T0_i =  T_i * ( 1 + ( (gamma - 1)/2 )*Mach(1)^2 );
+T0_i =  T_i * ( 1 + ( (gamma - 1) / 2 )*Mach(1)^2 );
 T0   = T0_i * ones( size( Mach ) );
 
 g = (gamma - 1) / 2;

@@ -62,12 +62,7 @@ if( abs(1 - M^2 ) <= delta )
         dMdx = M_minus;
     end
     
-    % debug
-%     if( rand( ) < .01 )
-%         display( [ '----------------------------' ] );
-%         display( [ 'M, x = ', num2str( M ), ', ', num2str( x ) ] );
-%         display( [ 'dMdx = ', num2str( dMdx ) ] );
-%     end
+    %display( [ 'dMdx = ', num2str( dMdx ) ] );
     return; % This is a singular edge case. Div zero if don't return now.
 end
 
@@ -86,7 +81,7 @@ dAdx = ( A_range(2) - A_range(1) ) /  ( 2*delta );
 mach_term =              2 * M + ( gamma - 1 ) * M^3;      % numerator over
 mach_term = mach_term / (2 * ( 1 - M^2 ) );                % denominator
 
-friction_term = gamma * M^2 * f / ( 2*D );
+friction_term = gamma * M^2 * f / ( 2*D ) * 4;
 
 area_term = dAdx / A;
 
