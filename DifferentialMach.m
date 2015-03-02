@@ -1,4 +1,5 @@
-function [ dMdx ] = DifferentialMach( x, M, Dfun, Dt, L, f, gamma, ss_ac )
+function [ dMdx ] = DifferentialMach( x, M, Dfun, Dt, L, f, gamma, ss_ac,...
+                                                x_choke, M_plus, M_minus )
 %DifferentialMach Calculates the differential Mach equation. Use with ode45
 %
 %   Specifically, the Mach equation for adiabatic flow is:
@@ -39,17 +40,34 @@ end
 % Check for the singular condition, dividing by zero at M = 1
 % We need to do some funky math to handle it.
 
-delta = 0.004; % .998 mach or 1.002 mach
+delta = 0.0098; % .9951 mach or 1.0051 mach
 if( abs(1 - M^2 ) <= delta )
     % error( 'DifferentialMach is singular as M approaches 1!' );
-    [ M_plus, M_minus ] = SolveMachSingularRoots( x_choke, Dfun, Dt, L, f, gamma );
-    
-    if( (M < 1) || ss_ac  ) % less than Mach, or super sonic_after choke
+        
+    dMdx = M_plus;
+    % less than Mach AND approaching choke
+    if( (M < 1) && ( x < x_choke )  )
         dMdx = M_plus;
-    else
+        
+    % greater than Mach AND approaching choke
+    if( ( M >= 1 ) && ( x < x_choke ) ) 
+        dMdx = M_minus;
+    
+    % super sonic after choke, and after choke
+    elseif( (ss_ac == true ) && ( x > x_choke) )
+        dMdx = M_plus;
+    
+    % Not ss after choke, and after choke
+    elseif( (ss_ac == false) && ( x > x_choke ) )
         dMdx = M_minus;
     end
     
+    % debug
+%     if( rand( ) < .01 )
+%         display( [ '----------------------------' ] );
+%         display( [ 'M, x = ', num2str( M ), ', ', num2str( x ) ] );
+%         display( [ 'dMdx = ', num2str( dMdx ) ] );
+%     end
     return; % This is a singular edge case. Div zero if don't return now.
 end
 
@@ -73,6 +91,16 @@ friction_term = gamma * M^2 * f / ( 2*D );
 area_term = dAdx / A;
 
 dMdx = mach_term * ( friction_term - area_term );
+
+% Catch singularity slipping thru
+if( dMdx > M_plus )
+    dMdx = M_plus;
+end
+
+if( dMdx < M_minus )
+    dMdx = M_minus;
+end
+display( [ ' // dMdx = ', num2str( dMdx ) ] );
 
 end
 

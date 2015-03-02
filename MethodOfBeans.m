@@ -101,15 +101,15 @@ else % if( is_choked == true )
     % The differential Mach equation is singular at the choke point, so the
     %   first step we pre-calculate using a linear assumption.
     % Start by finding the step size required to get past Mach 1.005
-    target_step = 1.005;
     if( ss_ac ) % super sonic_after choke
-        delta_x = ( 1 - target_step ) / M_plus;
+        target_step = 1.005;
+        delta_x = ( 1 - target_step ) / M_plus; % negative
     else
-        delta_x = ( 1 - target_step ) / M_minus;
+        target_step = 0.995;
+        delta_x = ( 1 - target_step ) / M_minus; % negative
     end
-    delta_x = abs( delta_x );
-
-    c2i_span = [ x_choke + delta_x , 0];  % one step beyond M=1
+                   % - negative
+    c2i_span = [ x_choke - delta_x , 0];  % one step beyond M=1
     c2i_M    = target_step;
 
     % Propogate 
