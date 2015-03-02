@@ -46,12 +46,6 @@ delta = 1e-4; % .0001
 range = [ x_choke - delta, x_choke + delta ];
 dDdx  = diff( 1 ./ Dfun( range, Dt, L ) ) ./ ( 2 * delta );
 
-% when f == 0, dDdx will also be zero at the choke point.
-if( abs( dDdx ) <= 1e-6 )
-    dDdx = 1; 
-    f    = 0;
-end
-
 
 % We need to find the:  derivative of { (1/A) * derivative of A  }
 % Where A is a Lambda funcction for Area = pi/4 D^2
@@ -72,7 +66,7 @@ d2dx2 = ( dAdx( x_choke + delta, Dt, L )...
 
 % That mess is done. Put it into c
 area_term     = -1 * d2dx2;
-friction_term = gamma * f * 0.5 / dDdx;
+friction_term = gamma * f * 0.5 * dDdx;
 
 c = area_term + friction_term;
 
