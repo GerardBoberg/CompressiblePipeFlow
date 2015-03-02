@@ -17,7 +17,7 @@ function [ x_choke, index_choke, error ] = FindChokePoint( x, D, f, gamma )
 %% Check inputs to the function
 
 % User didn't give us a gamma value for the gas.
-if( nargin <= 3 )
+if( nargin < 4 )
     gamma = 1.4; % gamma for air = 1.4. Use as default value
 end
 
@@ -28,6 +28,7 @@ if( (nargin <= 2) || ( f == 0 ) )
     
     x_choke     = x( i );
     index_choke =    i;
+    error       = 0;
     return; % no further calcs needed for this edge case.
 end
 

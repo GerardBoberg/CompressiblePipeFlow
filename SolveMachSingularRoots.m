@@ -42,8 +42,15 @@ b = gamma * f / Dfun( x_choke, Dt, L );
 % c is hard. We need to do finite-differences for each derivative.
 delta = 1e-4; % .0001
 
+% First, find d/dx ( 1 / D) 
 range = [ x_choke - delta, x_choke + delta ];
-dDdx  = diff( Dfun( range, Dt, L ) ) ./ ( 2 * delta );
+dDdx  = diff( 1 ./ Dfun( range, Dt, L ) ) ./ ( 2 * delta );
+
+% when f == 0, dDdx will also be zero at the choke point.
+if( abs( dDdx ) <= 1e-6 )
+    dDdx = 1; 
+    f    = 0;
+end
 
 
 % We need to find the:  derivative of { (1/A) * derivative of A  }
@@ -54,9 +61,11 @@ A = @( x, Dt, L )( (pi/4) .* ( Dfun( x, Dt, L ).^2 ) );
 dAdx = @( x, Dt, L)...
     ( diff( A( [x-delta, x+delta], Dt, L ) ) ./...
                                       ( 2 * delta * A( x, Dt, L) ) );
-
+  
 % And take a finite difference of that derivative lambda function. 
-d2dx2 = ( dAdx( x-delta, Dt, L ) - dAdx( x+delta, Dt, L ) ) ./ ( 2*delta );
+d2dx2 = ( dAdx( x_choke + delta, Dt, L )...
+        - dAdx( x_choke - delta, Dt, L ) )...
+        ./ ( 2*delta );
 % dAdx     = diff( A( range, Dt, L ) ) ./ ( 2 * delta );
 % dAdx     = dAdx / A( choke, Dt, L );
 %ddAdxAdx = dAdx;
@@ -71,6 +80,7 @@ c = area_term + friction_term;
 %% Determine which roots is M_plus and M_minus 
 % Should produce two roots, one above and one below zero.
 % solves for x in ( a x^2 + b x + c = 0 )
+
 r = roots( [ a, b, c] );
 
 if( r(1) > r(2) )
