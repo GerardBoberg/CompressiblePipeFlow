@@ -39,12 +39,12 @@ A    = (pi/4) * D.^2;         % Area, m^2
 dAdx = diff( A ) ./ diff( x );% diff returns per cell difference.
 dAdx = [ dAdx(1), dAdx ];     %   that is 1 spot shorter b/c can't estimate
                               %   derivative of A(1) due to no A(0) info.                       
-dAdx = dAdx / 5; % Magic number makes it work better
+% dAdx = dAdx / 1; % Magic number makes it work better % No, no it doesn't
                               
 
                           
 % The actual equation being calculated, solved for zero.
-error = ( dAdx ./ A ) - ( 2 * gamma * f ./ D );
+error = ( dAdx ./ A ) - ( 0.5 * gamma * f ./ D );
 
 % Used for debugging:
 % plot( x, dAdx ./ A, x, (2*f*gamma ./ D), x, error );

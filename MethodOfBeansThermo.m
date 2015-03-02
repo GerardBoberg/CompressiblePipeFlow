@@ -30,7 +30,7 @@ T0_i =  T_i * ( 1 + ( (gamma - 1)/2 )*Mach(1)^2 );
 T0   = T0_i * ones( size( Mach ) );
 
 g = (gamma - 1) / 2;
-T = T_i * 1 * ( 1 + g * Mach.^2 ) ./ ( 1 + g * Mach(1)^2 );
+T = T_i * 1 * ( 1 + g * Mach(1)^2 ) ./ ( 1 + g * Mach.^2 );
 
 %% Step 2: Calculate Pressure Variation
 %

@@ -50,7 +50,7 @@ if( abs(1 - M^2 ) <= delta )
         dMdx = M_plus;
         
     % greater than Mach AND approaching choke
-    if( ( M >= 1 ) && ( x < x_choke ) ) 
+    elseif( ( M >= 1 ) && ( x < x_choke ) ) 
         dMdx = M_minus;
     
     % super sonic after choke, and after choke
@@ -58,7 +58,7 @@ if( abs(1 - M^2 ) <= delta )
         dMdx = M_plus;
     
     % Not ss after choke, and after choke
-    elseif( (ss_ac == false) && ( x > x_choke ) )
+    elseif( (ss_ac == false) && ( x >= x_choke ) )
         dMdx = M_minus;
     end
     
@@ -78,9 +78,9 @@ A = ( pi/4 ) * D.^2;  % Area, assuming circular cross section
 
 % Find dA/dx for this point using a finite difference.
 delta = 0.0001; % meters
-range  = [ x , x + delta ];
+range  = [ x-delta , x + delta ];
 A_range = ( pi/4 ) * Dfun( range, Dt, L ).^2 ; 
-dAdx = ( A_range(2) - A_range(1) ) /  ( delta );
+dAdx = ( A_range(2) - A_range(1) ) /  ( 2*delta );
 
 %% Calculate the Differential Mach Equation
 mach_term =              2 * M + ( gamma - 1 ) * M^3;      % numerator over
@@ -93,14 +93,14 @@ area_term = dAdx / A;
 dMdx = mach_term * ( friction_term - area_term );
 
 % Catch singularity slipping thru
-if( dMdx > M_plus )
-    dMdx = M_plus;
-end
-
-if( dMdx < M_minus )
-    dMdx = M_minus;
-end
-display( [ ' // dMdx = ', num2str( dMdx ) ] );
+%if( dMdx > M_plus )
+%    dMdx = M_plus;
+%end
+%
+%if( dMdx < M_minus )
+%    dMdx = M_minus;
+%end
+%display( [ ' // dMdx = ', num2str( dMdx ), ' // x = ', num2str(x) ] );
 
 end
 
