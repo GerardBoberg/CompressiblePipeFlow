@@ -19,11 +19,15 @@ close all;
 
 
 %% Verification Cases
+% The combined MethodOfBeans model for AreaChange and Friction in
+%   compressible flows should simplify down to 
 % Table of Mach# and Thermodynamic properties for:
 %   1) Isentropic thru nozzle vs. Method of Beans
 %   2) Fanno flow thru a pipe vs. Method of Beans
 
+
 %% Isentropic Area change verification case
+% Isentropic Area
 
 %% Fanno Flow verification case
 % This is an example, done in class week 4, extended out to the sonic point
